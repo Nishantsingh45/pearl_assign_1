@@ -1,27 +1,23 @@
-name: Python Deploy
+# .github/workflows/main.yml
+name: Python app
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  deploy:
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.x
-
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r python-app/requirements.txt
-
-    - name: Run Python app
-      run: python python-app/app.py
+        pip install pytest
+    - name: Test with pytest
+      run: |
+        pytest
